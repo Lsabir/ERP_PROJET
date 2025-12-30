@@ -1,0 +1,74 @@
+<odoo>
+    <record id="view_hotel_reservation_form" model="ir.ui.view">
+        <field name="name">hotel.reservation.form</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Hotel Reservation">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="checkin,checkout,done"></field>
+                    <button name="action_reserve" type="object" string="Reserve" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_checkin" type="object" string="Check In" class="oe_highlight" invisible="state not in ('confirm')"/>
+                    <button name="action_checkout" type="object" string="Check Out" class="oe_highlight" invisible="state != 'checkin'"/>
+                    <button name="action_done" type="object" string="Done" class="oe_highlight" invisible="state != 'checkout'"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="btn-secondary" invisible="state != 'draft'"/>
+                </header>
+                <sheet>
+                    <h1><field name="reservation_code" readonly="1"/></h1>
+                    <group>
+                        <group>
+                            <field name="customer"/>
+                            <field name="invoice_address"/>
+                        </group>
+                        <group>
+                            <field name="reserve_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Folio">
+                            <field name="room_ids">
+                                    <tree editable="bottom" create="true" delete="true" edit="true">
+                                        <field name="room_id"/>
+                                        <field name="checkin"/>
+                                        <field name="checkout"/>
+                                        <field name="duration"/>
+                                        <field name="uom_id"/>
+                                        <field name="rent"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="room_id"/>
+                                            <field name="checkin"/>
+                                            <field name="checkout"/>
+                                            <field name="duration" readonly="1"/>
+                                            <field name="uom_id"/>
+                                            <field name="rent"/>
+                                            <field name="subtotal" readonly="1"/>
+                                        </group>
+                                    </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="oe_right" style="text-align: right; margin-top: 20px; margin-right: 20px;">
+                        <span class="o_form_label">Total: </span>
+                        <field name="grand_total" readonly="1" widget="monetary" style="font-weight: bold; font-size: 16px;"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hotel_reservation_tree" model="ir.ui.view">
+        <field name="name">hotel.reservation.tree</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <tree string="Hotel Reservation">
+                <field name="reservation_code"/>
+                <field name="customer"/>
+                <field name="reserve_date"/>
+                <field name="grand_total"/>
+                <field name="state" widget="badge" decoration-muted="state == 'draft'" decoration-warning="state == 'confirm'" decoration-info="state == 'checkin'" decoration-primary="state == 'checkout'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
